@@ -256,6 +256,25 @@
   @media (max-width: 520px) {
     .modules { grid-template-columns: 1fr; }
     .projects-grid { grid-template-columns: 1fr; }
+
+    /* Experience: role + date on same row, company below */
+    .job-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      gap: 2px 8px;
+      align-items: baseline;
+    }
+    .job-role { grid-column: 1; grid-row: 1; font-size: 17px; }
+    .job-co   { grid-column: 1; grid-row: 2; }
+    .job-date {
+      grid-column: 2; grid-row: 1;
+      margin-left: 0;
+      font-size: 10px;
+      white-space: nowrap;
+      text-align: right;
+      align-self: center;
+    }
   }
 </style>
 </head>
