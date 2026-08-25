@@ -211,17 +211,21 @@
 
   /* ---- Education ---- */
   #education { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   .edu-card {
-    border: 1px solid var(--border); border-radius: 8px; padding: 24px;
-    background: var(--lavender-soft);
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    background: var(--lavender-soft); display: flex; flex-direction: column;
   }
-  .edu-card .deg { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); margin-bottom: 6px; }
-  .edu-card .sch { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--plum); margin-bottom: 4px; }
+  .edu-photos { display: flex; gap: 4px; height: 190px; }
+  .edu-photos img { flex: 1; object-fit: cover; display: block; min-width: 0; }
+  .edu-photos img:first-child { border-radius: 0; }
+  .edu-info { padding: 22px 22px 20px; flex: 1; }
+  .edu-card .deg { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); margin-bottom: 5px; }
+  .edu-card .sch { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--plum); margin-bottom: 3px; }
   .edu-card .dt { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-muted); margin-bottom: 14px; }
-  .edu-card .gpa { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 14px; }
-  .edu-imgs { display: flex; gap: 10px; flex-wrap: wrap; }
-  .edu-imgs img { height: 100px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); }
+  .edu-card .edu-gpa { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--plum-light); font-weight: 600; margin-bottom: 12px; }
+  .edu-card ul { padding-left: 18px; margin: 0; }
+  .edu-card li { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 5px; }
 
   /* ---- Footer ---- */
   footer {
@@ -468,22 +472,37 @@
     </div>
     <div class="edu-grid">
       <div class="edu-card reveal">
-        <div class="deg">M.S., Information Management</div>
-        <div class="sch">University of Illinois at Urbana-Champaign</div>
-        <div class="dt">Aug 2022 — May 2024</div>
-        <div class="gpa">GPA 4.0 / 4.0. Coursework in Database Administration & Scaling, Data Warehousing & BI, Text Mining, Methods of Data Science, Information Modeling</div>
-        <div class="edu-imgs">
-          <img src="https://static.wixstatic.com/media/dbfd0f_9c59aa4bccb642afb492f0ddfee85727~mv2.jpg/v1/fill/w_200,h_260,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/WhatsApp%20Image%202024-08-20%20at%2017_57_edited.jpg" alt="UIUC graduation">
-          <img src="https://static.wixstatic.com/media/dbfd0f_2e96efe8eb19447cbfad13d035b5297c~mv2.jpg/v1/fill/w_180,h_260,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_2e96efe8eb19447cbfad13d035b5297c~mv2.jpg" alt="UIUC campus">
+        <div class="edu-photos">
+          <img src="https://static.wixstatic.com/media/dbfd0f_9c59aa4bccb642afb492f0ddfee85727~mv2.jpg/v1/fill/w_400,h_400,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/WhatsApp%20Image%202024-08-20%20at%2017_57_edited.jpg" alt="UIUC graduation">
+          <img src="https://static.wixstatic.com/media/dbfd0f_2e96efe8eb19447cbfad13d035b5297c~mv2.jpg/v1/fill/w_400,h_400,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_2e96efe8eb19447cbfad13d035b5297c~mv2.jpg" alt="UIUC campus">
+        </div>
+        <div class="edu-info">
+          <div class="deg">M.S., Information Management</div>
+          <div class="sch">University of Illinois at Urbana-Champaign</div>
+          <div class="dt">Aug 2022 — May 2024</div>
+          <div class="edu-gpa">GPA 4.0 / 4.0</div>
+          <ul>
+            <li>Database Administration &amp; Scaling</li>
+            <li>Data Warehousing &amp; Business Intelligence</li>
+            <li>Text Mining &amp; Information Retrieval</li>
+            <li>Methods of Data Science</li>
+            <li>Information Modeling</li>
+          </ul>
         </div>
       </div>
       <div class="edu-card reveal">
-        <div class="deg">B.E., Electronics & Telecommunication Engineering</div>
-        <div class="sch">Dwarkadas J. Sanghvi College of Engineering (DJSCE), University of Mumbai</div>
-        <div class="dt">Aug 2016 — Oct 2020</div>
-        <div class="gpa">GPA 9.5 / 10. 1st place in Smart India Hackathon 2019 among 2000+ teams (AI-based smart vehicles). Led the IETE marketing team, bringing in 15 sponsors and ₹300K in committee funds.</div>
-        <div class="edu-imgs">
-          <img src="https://static.wixstatic.com/media/dbfd0f_3311f257e24e4aba8d0d6bfdabe90a27~mv2.jpg/v1/fill/w_250,h_166,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_6170_JPG.jpg" alt="College event">
+        <div class="edu-photos">
+          <img src="https://static.wixstatic.com/media/dbfd0f_3311f257e24e4aba8d0d6bfdabe90a27~mv2.jpg/v1/fill/w_800,h_400,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_6170_JPG.jpg" alt="College event" style="flex:1;">
+        </div>
+        <div class="edu-info">
+          <div class="deg">B.E., Electronics &amp; Telecommunication Engineering</div>
+          <div class="sch">DJSCE, University of Mumbai</div>
+          <div class="dt">Aug 2016 — Oct 2020</div>
+          <div class="edu-gpa">GPA 9.5 / 10</div>
+          <ul>
+            <li>1st place, Smart India Hackathon 2019 among 2000+ teams (AI-based smart vehicles)</li>
+            <li>IETE Marketing Lead: secured 15 sponsors and raised ₹300K in committee funds</li>
+          </ul>
         </div>
       </div>
     </div>
