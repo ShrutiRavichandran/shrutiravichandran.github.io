@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monte Carlo Simulation for City Emergency Response — Shruti Ravichandran</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article-style.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a href="index.html">← Back to Portfolio</a><span class="site-name">SHRUTI RAVICHANDRAN</span></div></div>
+
+<div class="article-hero"><div class="article-hero-inner">
+<div class="eyebrow">Project · Simulation & Analytics</div>
+<h1>Monte Carlo Simulation of Emergency Response for City Planning</h1>
+<div class="meta">September 2024 · 8 min read</div>
+</div></div>
+
+<div class="article-body">
+<h2>Background</h2>
+<p>Monte Carlo Simulation is a statistical technique used to model and analyze complex systems that involve randomness and uncertainty. It relies on generating a large number of random samples to simulate potential outcomes, allowing for the estimation of the likelihood of different results. This approach is particularly useful for decision-making under uncertainty.</p>
+
+<h2>Introduction</h2>
+<p>This project is a Monte-Carlo simulation of a city with random emergency situations of different intensities. The simulation takes place within a custom city with defined dimensions and configurable emergency response units. The objective is to understand the optimal pattern for positioning and distribution of emergency response units such that the average response time can be minimized.</p>
+<p>Given a configuration with locations of the emergency response unit buildings, a simulation is run randomizing the time, location, and intensity of each emergency, along with possible traffic. The solution finds the average emergency response time and success percentage for the given configuration, and can be run over multiple configurations to determine which one produces the minimum response time.</p>
+
+<h2>Simulation Environment Design</h2>
+
+<h3>1. City Configuration</h3>
+<p>A city is constructed using a set of coordinates where each coordinate represents the area around its vicinity. Each city is divided into zones with equal areas (default of 9 coordinates per zone), and every zone can have a different population. There is a path between all horizontally and vertically adjacent coordinates with a default commute time of 3 minutes.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_f75469d96e0d43ea9351576ca0bca09b~mv2.png/v1/fill/w_606,h_467,al_c,q_85,enc_avif,quality_auto/dbfd0f_f75469d96e0d43ea9351576ca0bca09b~mv2.png" alt="City zone configuration">
+<p>The city has been imagined as a <strong>networkx graph</strong>, with a node representing a coordinate, an edge representing the roads between two areas, and the edge attribute representing the commute time for emergency response vehicles.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_c8c21d8c89d34149a65b0522f9a100fb~mv2.png/v1/fill/w_980,h_462,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_c8c21d8c89d34149a65b0522f9a100fb~mv2.png" alt="NetworkX graph model">
+
+<h3>2. Emergency Units</h3>
+<p>Three types of emergency response unit buildings are defined: Large (7 teams), Medium (5 teams), and Small (3 teams). Teams are unavailable when responding to an emergency — commuting, resolving, and commuting back.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_6acf7dfada4a4abd9121fc99ec17ac3b~mv2.png/v1/fill/w_600,h_611,al_c,q_90,enc_avif,quality_auto/dbfd0f_6acf7dfada4a4abd9121fc99ec17ac3b~mv2.png" alt="Emergency unit positions">
+
+<h3>3. Emergency Configuration</h3>
+<p>Emergencies can be of 5 intensities with different resolution times and personnel requirements. The default base emergency rate is 13.1615 emergencies per minute for a population of 200K, scaled according to the configured city and zones.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_85ef6f10fa454b9ca679d49355b2106c~mv2.png/v1/fill/w_448,h_239,al_c,q_85,enc_avif,quality_auto/dbfd0f_85ef6f10fa454b9ca679d49355b2106c~mv2.png" alt="Emergency intensity levels">
+
+<h2>Randomized Variables</h2>
+
+<h3>Time of Emergency</h3>
+<p>The probability of an emergency occurring within the next minute in each zone is obtained using the <strong>Poisson distribution</strong>, modeled using a real 911 emergency calls dataset from Montgomery County PD. The calculated base rate was 13.16 emergencies per minute for a population of ~200K.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_7cc9aa4a4998411c8fd6e2fc62ad5061~mv2.png/v1/fill/w_580,h_441,al_c,q_85,enc_avif,quality_auto/dbfd0f_7cc9aa4a4998411c8fd6e2fc62ad5061~mv2.png" alt="Poisson distribution">
+
+<h3>Location, Intensity & Traffic</h3>
+<p>Location coordinates are randomized within a zone using a <strong>uniform distribution</strong>. Intensity is randomized on a discrete scale of 1-5 with configurable probabilities. Traffic delay uses a <strong>PERT probability distribution</strong> to generate the percent increase penalty beyond baseline commute time, with a deterministic time scaling factor for different periods of the day.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_20c3548b0a6e49839c2b34df637beacc~mv2.png/v1/fill/w_525,h_276,al_c,q_85,enc_avif,quality_auto/dbfd0f_20c3548b0a6e49839c2b34df637beacc~mv2.png" alt="PERT distribution">
+
+<h2>Algorithm Flowchart</h2>
+<p>The following flowcharts depict how emergencies are created and resolved within the simulation:</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_829c20204f19495ea60c102211aed9bc~mv2.png/v1/fill/w_741,h_489,al_c,q_90,enc_avif,quality_auto/dbfd0f_829c20204f19495ea60c102211aed9bc~mv2.png" alt="Emergency creation flowchart">
+<img src="https://static.wixstatic.com/media/dbfd0f_592b9c4a07ba4b86b9415cc2bbcf86c7~mv2.png/v1/fill/w_555,h_505,al_c,q_85,enc_avif,quality_auto/dbfd0f_592b9c4a07ba4b86b9415cc2bbcf86c7~mv2.png" alt="Emergency resolution flowchart">
+
+<h2>Hypotheses and Experiments</h2>
+<p><strong>Objective:</strong> Determining the optimal position of emergency response units.</p>
+<p>Three configurations were tested: all units on corners/edges, all units in the interior, and a hybrid approach.</p>
+
+<table>
+<tr><th>Configuration</th><th>Avg Response Time</th><th>Avg Success Rate</th></tr>
+<tr><td>Case 1: All units on corners/edges</td><td>9.41 mins</td><td>58.22%</td></tr>
+<tr><td>Case 2: All units in interior</td><td>7.22 mins</td><td>76.83%</td></tr>
+<tr><td>Case 3: Hybrid (half corners, half interior)</td><td>7.65 mins</td><td>71.56%</td></tr>
+</table>
+
+<p><strong>Conclusion:</strong> Positioning emergency units in the inner portion of the city with none at the corners ensures minimum average response time and maximum success rate. Further experiments showed that having more small, fewer medium, and fewest large buildings helps keep costs low, agility high, and successful resolutions high.</p>
+
+<h2>Conclusion</h2>
+<p>The Monte Carlo Simulation is a versatile analytical tool that can be applied to scenarios beyond emergency response — financial forecasting, risk management, supply chain optimization. By randomizing unpredictable variables, it provides realistic estimates of outcomes, helping to identify the most efficient strategies for complex problems where uncertainty and variability are key factors.</p>
+</div>
+
+<div class="article-footer"><a class="back-link" href="index.html">← Back to Portfolio</a></div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cassandra & AWS for Real-Time Rideshare — Shruti Ravichandran</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article-style.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a href="index.html">← Back to Portfolio</a><span class="site-name">SHRUTI RAVICHANDRAN</span></div></div>
+
+<div class="article-hero"><div class="article-hero-inner">
+<div class="eyebrow">Project · Data Engineering</div>
+<h1>Effortless Scalability: Cassandra and AWS Powering Real-Time Rideshare Operations</h1>
+<div class="meta">September 2024 · 6 min read</div>
+</div></div>
+
+<div class="article-body">
+<h2>Introduction</h2>
+<p>Imagine a rapidly growing rideshare company facing an influx of massive datasets. The company needs a robust database solution to efficiently manage and analyze high-volume, time-series data. The challenge: find a system that can handle large amounts of data quickly, stay running even if part of it fails, grow as the company grows, keep data secure, and not break the bank. Apache Cassandra on AWS is being considered as a solution.</p>
+
+<p>The solution should handle large-scale time-series data efficiently, ensure always-on availability, scale seamlessly, implement strong security, perform well under high concurrency, and be cost-effective.</p>
+
+<h2>Solution Architecture</h2>
+
+<h3>Choosing the Right Dataset</h3>
+<p>The NYC Yellow Taxi Trips dataset was chosen — collected by the NYC Taxi and Limousine Commission, it includes detailed trip information such as pickup/drop-off times, distances, and fare amounts. The dataset spans January to May 2022 and contains <strong>over 16 million records</strong>.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_fcd7913027464b50adff4ab8b8e2e1d8~mv2.png/v1/fill/w_980,h_387,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_fcd7913027464b50adff4ab8b8e2e1d8~mv2.png" alt="Dataset schema">
+
+<h3>Efficient Data Handling</h3>
+<p>The dataset was partitioned by pickup date because time-series data is best handled by segmenting into manageable chunks based on time. Cassandra distributes data efficiently across nodes, enabling parallel processing and faster query responses.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_7519920ed7394182a889226e642e7b2e~mv2.png/v1/fill/w_980,h_436,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_7519920ed7394182a889226e642e7b2e~mv2.png" alt="Partitioning strategy">
+
+<h3>Ensuring Availability and Resilience</h3>
+<p>A <strong>6-node Cassandra cluster</strong> was set up on AWS EC2 instances distributed across three availability zones in us-east-1. This provides high availability (if one zone goes down, others continue), fault tolerance (handles an entire zone failure), improved performance (data processed closer to where it's needed), and easy scalability.</p>
+
+<h3>Replication for Resilience</h3>
+<p>A replication factor of 2 was chosen — each piece of data stored on two nodes. This provides data redundancy while keeping write performance efficient. The Network Topology Strategy ensures data is spread across availability zones.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_54c18b20f8d84d6389d9e13a516e0c2c~mv2.png/v1/fill/w_980,h_169,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_54c18b20f8d84d6389d9e13a516e0c2c~mv2.png" alt="Replication topology">
+
+<h3>Loading and Querying Data</h3>
+<p>The dataset was loaded at a rate of 6,500 rows per second using the COPY command, with Cassandra's sharding mechanism distributing data evenly across all nodes for parallel processing.</p>
+<img src="https://static.wixstatic.com/media/dbfd0f_6c19bc5649fd4003883ff2cbbbecf2a7~mv2.png/v1/fill/w_980,h_410,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/dbfd0f_6c19bc5649fd4003883ff2cbbbecf2a7~mv2.png" alt="Data loading">
+
+<h3>Security</h3>
+<p>Network security restricted EC2 access to specific IPs. User authentication was enabled with multiple roles. Specific permissions were assigned to limit access. Automated backups were set up via bash script, storing snapshots in Google Drive.</p>
+
+<h2>Performance Test</h2>
+<p>A NodeJS application was developed to interface with Cassandra, with Postman used to trigger queries. Three query types were tested:</p>
+<pre><code>SELECT MAX(trip_distance) FROM nyc_taxi_data.yellow_taxi_trips WHERE pickup_date='2022-01-01';
+SELECT AVG(total_amount) FROM nyc_taxi_data.yellow_taxi_trips WHERE pickup_date='2022-01-01';
+SELECT COUNT(*) FROM nyc_taxi_data.yellow_taxi_trips WHERE pickup_date='2022-01-01';</code></pre>
+
+<h3>Single Request Results</h3>
+<table>
+<tr><th>Query Type</th><th>Single-Node (sec)</th><th>Multi-Node (sec)</th></tr>
+<tr><td>Max Trip Distance</td><td><strong>82.28</strong></td><td>92.10</td></tr>
+<tr><td>Average Total Amount</td><td><strong>85.79</strong></td><td>95.30</td></tr>
+<tr><td>Count of Trips</td><td><strong>47.49</strong></td><td>52.45</td></tr>
+</table>
+<p>The single-node setup showed better performance for individual queries due to the lack of network overhead. This was expected for non-concurrent requests.</p>
+
+<h3>Under Concurrent Load (60 requests)</h3>
+<table>
+<tr><th>Query Type</th><th>Single-Node (sec)</th><th>Multi-Node (sec)</th></tr>
+<tr><td>Max Trip Distance</td><td>82.28</td><td><strong>72.08</strong></td></tr>
+<tr><td>Average Total Amount</td><td>85.79</td><td><strong>41.02</strong></td></tr>
+<tr><td>Count of Trips</td><td>47.49</td><td><strong>36.92</strong></td></tr>
+</table>
+<p>The multi-node cluster showed a <strong>40-50% performance improvement</strong> under concurrent requests. The distributed nature allows multiple nodes to process queries in parallel.</p>
+
+<h3>Cost Analysis</h3>
+<table>
+<tr><th>AWS Entity</th><th>Monthly Cost</th></tr>
+<tr><td>EC2 t3.medium (6 instances)</td><td>$179.71</td></tr>
+<tr><td>Data Transfer within VPC</td><td>$6.00</td></tr>
+<tr><td>Elastic IP Addresses (6)</td><td>$21.60</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>$207.31/month</strong></td></tr>
+</table>
+
+<h2>Recommendations</h2>
+<ul>
+<li><strong>Use a Multi-Node Cluster</strong> for environments with high concurrency and large data volumes.</li>
+<li><strong>Implement Time-Based Partitioning</strong> to distribute load efficiently across nodes.</li>
+<li><strong>Handle Geographically Disparate Requests</strong> using Cassandra's ability to route to the nearest node, and consider CDNs for frequently accessed data.</li>
+</ul>
+</div>
+
+<div class="article-footer"><a class="back-link" href="index.html">← Back to Portfolio</a></div>
+</body>
+</html>
