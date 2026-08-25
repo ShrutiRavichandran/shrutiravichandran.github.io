@@ -147,6 +147,8 @@
   .about-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: start; }
   .about-copy p { font-size: 16px; line-height: 1.8; color: var(--ink-soft); margin-bottom: 16px; }
   .about-copy strong { color: var(--ink); }
+  .about-copy ul { font-size: 16px; line-height: 1.8; color: var(--ink-soft); margin: 0 0 16px; padding-left: 20px; }
+  .about-copy li { margin-bottom: 4px; }
   .noteframe {
     border: 1.5px solid var(--lavender-2); border-radius: 8px;
     padding: 22px 20px; background: var(--lavender-soft);
@@ -251,10 +253,24 @@
   .fine { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 36px; }
 
   /* ---- Responsive ---- */
+  /* ---- Desktop (explicit anchor) ---- */
+  @media (min-width: 901px) {
+    nav { display: flex !important; }
+    #navToggle { display: none !important; }
+    .modules { grid-template-columns: repeat(4,1fr); }
+    .projects-grid { grid-template-columns: repeat(3,1fr); }
+    .about-grid { grid-template-columns: 1.15fr .85fr; }
+    .edu-grid { grid-template-columns: 1fr 1fr; }
+    .stats { grid-template-columns: repeat(4,1fr); }
+  }
+
+  /* ---- Tablet ---- */
   @media (max-width: 900px) {
     .modules { grid-template-columns: repeat(2,1fr); }
     .projects-grid { grid-template-columns: 1fr 1fr; }
   }
+
+  /* ---- Phone ---- */
   @media (max-width: 720px) {
     nav { display: none; }
     #navToggle { display: block; }
@@ -263,10 +279,15 @@
     .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--border); }
     .about-grid { grid-template-columns: 1fr; }
     .edu-grid { grid-template-columns: 1fr; }
+    .edu-photos { height: 160px; }
   }
+
+  /* ---- Small phone ---- */
   @media (max-width: 520px) {
     .modules { grid-template-columns: 1fr; }
     .projects-grid { grid-template-columns: 1fr; }
+    .edu-photos { height: 130px; }
+    .hero-copy { min-width: 0; }
   }
 </style>
 </head>
@@ -330,7 +351,7 @@
       <div class="about-copy reveal">
         <p><strong>I'm a Data Engineer who specializes in designing batch data processing systems, optimizing Spark jobs, and integrating AI into the software development lifecycle.</strong></p>
         <p>At CVS Health, I build and maintain the backend for a rebate-analytics application that scales a legacy Excel model to process client contracts worth ~$23B. Some highlights:</p>
-        <ul style="font-size:16px;line-height:1.8;color:var(--ink-soft);margin:0 0 16px;padding-left:20px;">
+        <ul>
           <li>60+ multi-cloud PySpark ETL/ELT pipelines across Azure, GCP, and Databricks</li>
           <li>Spark job optimization from 8+ hours to 30 minutes (93% faster), saving $200K/yr in compute</li>
           <li>Data validation framework that cut UAT from 15 days to 4, unlocking a ~$8B contract opportunity</li>
